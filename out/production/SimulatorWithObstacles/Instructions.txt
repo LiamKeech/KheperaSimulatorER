@@ -1,0 +1,2 @@
+I’ve attached the necessary files for the simulator. The “Code.zi” (actually a .zip) folder contains all the classes, NN*.eg must be included in the base directory of the project, and “encog-core-3.4.jar” must be included as a library within the project.
+I ended up reverting all the changes I discussed with you yesterday – it made the usage of the classes unnecessarily complicated. Thus, all that should be changed now is the use of the new sensor simulator.
