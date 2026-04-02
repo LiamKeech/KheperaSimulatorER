@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class FitnessFunction {
     public static final double gridWidth = 30.0;
-    public static final double cellWidth = gridWidth / 3;
+    public static final double cellWidth = gridWidth / 3.0;
 
-    private static final int[] clockwiseOrder = {0, 1, 2, 5, 8, 7, 6, 3};
+    private static final int[] clockwiseOrder = {0, 1, 2, 5, 8, 7, 6, 3, 0};
 
-    private static final double centrePenalty = 5.0;
-    private static final double outsidePenalty = 10.0;
+    private static final double centrePenalty = 25.0;
+    private static final double outsidePenalty = 50.0;
     private static final double cellReward = 20.0;
-    private static final double traversalReward = 100.0;
+    private static final double traversalReward = 300.0;
 
     public static int getBlockID(double x, double y) {
         if (x < -gridWidth || x > gridWidth || y < -gridWidth || y > gridWidth) {
@@ -21,19 +21,19 @@ public class FitnessFunction {
         int col;
         if (x < -cellWidth) {
             col = 0;
-        } else if (x > cellWidth) {
+        } else if (x < cellWidth) {
             col = 1;
         } else {
             col = 2;
         }
 
         int row;
-        if (y < -cellWidth) {
+        if (y > cellWidth) {
             row = 0;
-        } else if (y > cellWidth) {
-            row = 1;
-        } else {
+        } else if (y < -cellWidth) {
             row = 2;
+        } else {
+            row = 1;
         }
 
         return (row * 3) + col;
@@ -56,14 +56,16 @@ public class FitnessFunction {
             } else if (cellID == 4) {
                 fitness -= centrePenalty;
             } else {
-                if (nextCellIdx < clockwiseOrder.length && cellID == clockwiseOrder[nextCellIdx] && !cellsVisited[cellID]) {
+                if (nextCellIdx < clockwiseOrder.length && cellID == clockwiseOrder[nextCellIdx]) {
+                    if (!cellsVisited[cellID] || nextCellIdx == clockwiseOrder.length - 1) {
 
-                    cellsVisited[cellID] = true;
-                    fitness += cellReward;
-                    nextCellIdx++;
+                        cellsVisited[cellID] = true;
+                        fitness += cellReward;
+                        nextCellIdx++;
 
-                    if (nextCellIdx == clockwiseOrder.length) {
-                        fitness += traversalReward;
+                        if (nextCellIdx == clockwiseOrder.length) {
+                            fitness += traversalReward;
+                        }
                     }
                 }
             }
