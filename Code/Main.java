@@ -6,7 +6,7 @@ public class Main {
 
 
     private static final int POPULATION_SIZE = 50;
-    private static final int GENERATIONS = 200;
+    private static final int GENERATIONS = 100;
     private static final int ELITE_COUNT = 2;
     private static final int TOURNAMENT_SIZE = 5;
     private static final double MUTATION_RATE = 0.15;
@@ -38,18 +38,40 @@ public class Main {
 
             System.out.printf("Generation %d, Best fitness: %.2f, All-time best: %.2f%n", gen, best.getFitness(), bestEver.getFitness());
 
-            if (bestEver.getFitness() >= 280.0) {
-                System.out.println("\nStopping early.");
-                break;
-            }
+//            if (bestEver.getFitness() >= 480.0) {
+//                System.out.println("\nStopping early.");
+//                break;
+//            }
 
             population = nextGeneration(population);
         }
 
+//        System.out.println("\nBest chromosome found after " + GENERATIONS + " generations");
+//        System.out.println("Fitness: " + bestEver.getFitness());
+//        ArrayList<KheperaState> bestStates = runSimulation(bestEver);
+//        GridVisualiser.show(bestStates, bestEver.getFitness());
         System.out.println("\nBest chromosome found after " + GENERATIONS + " generations");
         System.out.println("Fitness: " + bestEver.getFitness());
         ArrayList<KheperaState> bestStates = runSimulation(bestEver);
-        GridVisualiser.show(bestStates, bestEver.getFitness());
+
+        // 1. VisualFrame requires an ArrayList of 'State', not 'KheperaState'
+        ArrayList<State> posStates = new ArrayList<>();
+        for (KheperaState kst : bestStates) {
+            posStates.add(kst.position);
+        }
+
+        // 2. Setup starting point and dummy target (since your maze doesn't use a target point)
+        Point startPoint = new Point((int) START_STATE.sx, (int) START_STATE.sy);
+        Point dummyTarget = new Point(0, 0);
+
+        // 3. Launch VisualFrame exactly like Example.java
+        // (x, y, width, height, obstacles, obstacleRadius, target, start, targetRadius, robotRadius)
+        VisualFrame vis = new VisualFrame(50, 50, 800, 800, obstacles, 10.0, dummyTarget, startPoint, 10.0, 10.0);
+
+        vis.setPath(posStates, "Final Fitness: " + bestEver.getFitness());
+
+        Thread t = new Thread(vis);
+        t.start();
 
     }
 
