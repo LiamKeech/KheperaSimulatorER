@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="Code">
+  <library name="encog-core-3.4">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Code.zip!/" />
+      <root url="jar://$PROJECT_DIR$/lib/encog-core-3.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

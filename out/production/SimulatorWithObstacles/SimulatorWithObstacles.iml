@@ -17,6 +17,7 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="encog-core-3.4" level="project" />
+    <orderEntry type="library" exported="" name="JavaFX" level="project" />
   </component>
 </module>

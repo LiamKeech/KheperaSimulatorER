@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Main {
 
 
-    private static final int POPULATION_SIZE = 50;
-    private static final int GENERATIONS = 100;
+    private static final int POPULATION_SIZE = 150;
+    private static final int GENERATIONS = 200;
     private static final int ELITE_COUNT = 2;
     private static final int TOURNAMENT_SIZE = 5;
     private static final double MUTATION_RATE = 0.15;
@@ -24,7 +24,8 @@ public class Main {
 
         Chromosome bestEver = population[0];
         //EA loop
-        for (int gen = 0; gen < GENERATIONS; gen++) {
+        int gen;
+        for (gen = 0; gen < GENERATIONS; gen++) {
             for (Chromosome chromosome : population) {
                 double fitness = getFitness(chromosome);
                 chromosome.setFitness(fitness);
@@ -38,23 +39,18 @@ public class Main {
 
             System.out.printf("Generation %d, Best fitness: %.2f, All-time best: %.2f%n", gen, best.getFitness(), bestEver.getFitness());
 
-//            if (bestEver.getFitness() >= 480.0) {
-//                System.out.println("\nStopping early.");
-//                break;
-//            }
+            if (bestEver.getFitness() >= 480.0) {
+                System.out.println("\nStopping early.");
+                break;
+            }
 
             population = nextGeneration(population);
         }
 
-//        System.out.println("\nBest chromosome found after " + GENERATIONS + " generations");
-//        System.out.println("Fitness: " + bestEver.getFitness());
-//        ArrayList<KheperaState> bestStates = runSimulation(bestEver);
-//        GridVisualiser.show(bestStates, bestEver.getFitness());
-        System.out.println("\nBest chromosome found after " + GENERATIONS + " generations");
+        System.out.println("\nBest chromosome found after " + gen + " generations");
         System.out.println("Fitness: " + bestEver.getFitness());
         ArrayList<KheperaState> bestStates = runSimulation(bestEver);
 
-        // 1. VisualFrame requires an ArrayList of 'State', not 'KheperaState'
         ArrayList<State> posStates = new ArrayList<>();
         for (KheperaState kst : bestStates) {
             posStates.add(kst.position);
@@ -62,12 +58,12 @@ public class Main {
 
         // 2. Setup starting point and dummy target (since your maze doesn't use a target point)
         Point startPoint = new Point((int) START_STATE.sx, (int) START_STATE.sy);
-        Point dummyTarget = new Point(0, 0);
 
-        // 3. Launch VisualFrame exactly like Example.java
-        // (x, y, width, height, obstacles, obstacleRadius, target, start, targetRadius, robotRadius)
-        VisualFrame vis = new VisualFrame(50, 50, 800, 800, obstacles, 10.0, dummyTarget, startPoint, 10.0, 10.0);
+        // Move the target off-screen so it stops blocking the center
+        Point dummyTarget = new Point(999, 999);
 
+        // Pass smaller numbers for the radius at the end (1.0 for target, 3.0 for robot)
+        VisualFrame vis = new VisualFrame(50, 50, 800, 800, obstacles, 1.0, dummyTarget, startPoint, 1.0, 3.0);
         vis.setPath(posStates, "Final Fitness: " + bestEver.getFitness());
 
         Thread t = new Thread(vis);
