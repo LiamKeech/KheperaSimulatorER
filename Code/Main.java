@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Main {
 
-
     private static final int POPULATION_SIZE = 150;
     private static final int GENERATIONS = 200;
     private static final int ELITE_COUNT = 2;
@@ -13,7 +12,7 @@ public class Main {
     private static final double MUTATION_STRENGTH = 0.08;
 
     private static final State START_STATE = new State(-20, 20, 270);
-    private static ArrayList<Point> obstacles = new ArrayList<>(); //empty
+    private static final ArrayList<Point> obstacles = new ArrayList<>(); //empty
 
     public static void main(String[] args) {
 
@@ -56,16 +55,11 @@ public class Main {
             posStates.add(kst.position);
         }
 
-        // 2. Setup starting point and dummy target (since your maze doesn't use a target point)
+        //Visualisation
         Point startPoint = new Point((int) START_STATE.sx, (int) START_STATE.sy);
-
-        // Move the target off-screen so it stops blocking the center
         Point dummyTarget = new Point(999, 999);
-
-        // Pass smaller numbers for the radius at the end (1.0 for target, 3.0 for robot)
         VisualFrame vis = new VisualFrame(50, 50, 800, 800, obstacles, 1.0, dummyTarget, startPoint, 1.0, 3.0);
         vis.setPath(posStates, "Final Fitness: " + bestEver.getFitness());
-
         Thread t = new Thread(vis);
         t.start();
 
@@ -73,11 +67,6 @@ public class Main {
 
     private static double getFitness(Chromosome chromosome) {
         return FitnessFunction.evaluate(runSimulation(chromosome));
-    }
-
-    private static ArrayList<KheperaState> runSimulation(Chromosome chromosome) {
-        KheperaSimulator sim = new KheperaSimulator(obstacles, new State(START_STATE.sx, START_STATE.sy, START_STATE.sa));
-        return sim.getKheperaState(chromosome.createCommands());
     }
 
     private static Chromosome[] nextGeneration(Chromosome[] current) {
@@ -99,5 +88,10 @@ public class Main {
         }
 
         return next;
+    }
+
+    private static ArrayList<KheperaState> runSimulation(Chromosome chromosome) {
+        KheperaSimulator sim = new KheperaSimulator(obstacles, new State(START_STATE.sx, START_STATE.sy, START_STATE.sa));
+        return sim.getKheperaState(chromosome.createCommands());
     }
 }
