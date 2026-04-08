@@ -43,7 +43,8 @@ public class FitnessFunction {
         double fitness = 0.0;
         int nextCellIdx = 0;
 
-        for (KheperaState state : states) {
+        for (int i = 0; i < states.size(); i++) {
+            KheperaState state = states.get(i);
             int cellID = getBlockID(state.position.sx, state.position.sy);
 
             if (cellID == -1) {
@@ -56,6 +57,9 @@ public class FitnessFunction {
 
                 if (nextCellIdx == clockwiseOrder.length) {
                     fitness += traversalReward;
+
+
+                    return fitness;
                 }
             }
         }
