@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Chromosome {
 
-    public static final int numberOfCommands = 25;
+    public static final int numberOfCommands = 10;
     private final int[] leftSpeeds  = new int[numberOfCommands];
     private final int[] rightSpeeds = new int[numberOfCommands];
     private final int[] durations   = new int[numberOfCommands];
