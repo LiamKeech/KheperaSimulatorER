@@ -2,7 +2,7 @@ package Code;
 
 import java.util.ArrayList;
 
-public class FitnessFunction {
+public class FlatFitnessFunction {
     public static final double gridWidth = 30.0; // 60 x 60 grid
     public static final double cellWidth = gridWidth / 3.0; // 3 x 3 cells
 
@@ -57,8 +57,6 @@ public class FitnessFunction {
 
                 if (nextCellIdx == clockwiseOrder.length) {
                     fitness += traversalReward;
-
-
                     return fitness;
                 }
             }
