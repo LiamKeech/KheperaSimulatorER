@@ -66,7 +66,10 @@ public class Main {
     }
 
     private static double getFitness(Chromosome chromosome) {
-        return FlatFitnessFunction.evaluate(runSimulation(chromosome));
+        //return FlatFitnessFunction.evaluate(runSimulation(chromosome));
+        //return DistanceScaledFitnessFunction.evaluate(runSimulation(chromosome));
+        //return CheckpointFitnessFunction.evaluate(runSimulation(chromosome));
+        return TimeTrialFitnessFunction.evaluate(runSimulation(chromosome));
     }
 
     private static Chromosome[] nextGeneration(Chromosome[] current) {
@@ -90,35 +93,40 @@ public class Main {
         return next;
     }
 
-    private static ArrayList<KheperaState> runSimulation(Chromosome chromosome) {
+    private static ArrayList<KheperaState> runSimulation(Chromosome chromosome) { //This will always work
         KheperaSimulator sim = new KheperaSimulator(obstacles, new State(START_STATE.sx, START_STATE.sy, START_STATE.sa));
-
-        ArrayList<Command> commands = chromosome.createCommands();
-        ArrayList<KheperaState> states = new ArrayList<>();
-
-        int nextCellIdx = 0;
-        int [] clockwiseOrder = {0, 1, 2, 5, 8, 7, 6, 3, 0};
-
-        for (int i = 0; i < commands.size(); i++) {
-
-            //Runs a single command at a time
-            //If final cell reached, remaining commands do nothing
-            ArrayList<Command> OneCommand = new ArrayList<>();
-            OneCommand.add(commands.get(i));
-            ArrayList<KheperaState> step = sim.getKheperaState(OneCommand);
-
-            KheperaState latestCommand = step.getLast();
-            states.add(latestCommand);
-
-            int cellID = FlatFitnessFunction.getBlockID(latestCommand.position.sx, latestCommand.position.sy);
-            if (nextCellIdx < clockwiseOrder.length && cellID == clockwiseOrder[nextCellIdx]) {
-                nextCellIdx++;
-                if (nextCellIdx == clockwiseOrder.length) {
-                    break;
-                }
-            }
-        }
-
-        return states;
+        return sim.getKheperaState(chromosome.createCommands());
     }
+
+//    private static ArrayList<KheperaState> runSimulation(Chromosome chromosome) { //This doesn't work, but it allows for early stopping
+//        KheperaSimulator sim = new KheperaSimulator(obstacles, new State(START_STATE.sx, START_STATE.sy, START_STATE.sa));
+//
+//        ArrayList<Command> commands = chromosome.createCommands();
+//        ArrayList<KheperaState> states = new ArrayList<>();
+//
+//        int nextCellIdx = 0;
+//        int [] clockwiseOrder = {0, 1, 2, 5, 8, 7, 6, 3, 0};
+//
+//        for (int i = 0; i < commands.size(); i++) {
+//
+//            //Runs a single command at a time
+//            //If final cell reached, remaining commands do nothing
+//            ArrayList<Command> OneCommand = new ArrayList<>();
+//            OneCommand.add(commands.get(i));
+//            ArrayList<KheperaState> step = sim.getKheperaState(OneCommand);
+//
+//            KheperaState latestCommand = step.getLast();
+//            states.add(latestCommand);
+//
+//            int cellID = FlatFitnessFunction.getBlockID(latestCommand.position.sx, latestCommand.position.sy);
+//            if (nextCellIdx < clockwiseOrder.length && cellID == clockwiseOrder[nextCellIdx]) {
+//                nextCellIdx++;
+//                if (nextCellIdx == clockwiseOrder.length) {
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return states;
+//    }
 }
