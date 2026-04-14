@@ -102,26 +102,23 @@ public class Main {
         KheperaSimulator sim = new KheperaSimulator(obstacles, new State(START_STATE.sx, START_STATE.sy, START_STATE.sa));
 
         ArrayList<Command> allCommands = chromosome.createCommands();
-        ArrayList<Command> prefix = new ArrayList<>();
+        ArrayList<Command> executed = new ArrayList<>();
 
         int nextCellIdx = 0;
         int[] clockwiseOrder = {0, 1, 2, 5, 8, 7, 6, 3, 0};
 
-        ArrayList<KheperaState> latestHistory = sim.getKheperaState(prefix);
+        ArrayList<KheperaState> history = sim.getKheperaState(executed);
 
         for (int i = 0; i < allCommands.size(); i++) {
-            prefix.add(allCommands.get(i)); // grow command history
-            latestHistory = sim.getKheperaState(prefix);
+            executed.add(allCommands.get(i));
+            history = sim.getKheperaState(executed);
 
-            if (latestHistory.isEmpty()) {
+            if (history.isEmpty()) {
                 break;
             }
 
-            KheperaState latestState = latestHistory.get(latestHistory.size() - 1);
-            int cellID = FlatFitnessFunction.getBlockID(
-                    latestState.position.sx,
-                    latestState.position.sy
-            );
+            KheperaState latestState = history.getLast();
+            int cellID = GridCellMap.getBlockID(latestState.position.sx, latestState.position.sy);
 
             if (nextCellIdx < clockwiseOrder.length && cellID == clockwiseOrder[nextCellIdx]) {
                 nextCellIdx++;
@@ -131,6 +128,6 @@ public class Main {
             }
         }
 
-        return latestHistory;
+        return history;
     }
 }

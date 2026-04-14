@@ -13,38 +13,14 @@ public class FlatFitnessFunction {
     private static final double cellReward = 20.0;
     private static final double traversalReward = 300.0; // (9 x 20) + 300 = 480
 
-    public static int getBlockID(double x, double y) {
-        if (x < -gridWidth || x > gridWidth || y < -gridWidth || y > gridWidth) {
-            return -1;
-        }
-
-        int col;
-        if (x < -cellWidth) {
-            col = 0;
-        } else if (x < cellWidth) {
-            col = 1;
-        } else {
-            col = 2;
-        }
-
-        int row;
-        if (y > cellWidth) {
-            row = 0;
-        } else if (y < -cellWidth) {
-            row = 2;
-        } else {
-            row = 1;
-        }
-
-        return (row * 3) + col;
-    }
-
     public static double evaluate(ArrayList<KheperaState> states) {
         double fitness = 0.0;
         int nextCellIdx = 0;
 
         for (KheperaState state : states) {
-            int cellID = getBlockID(state.position.sx, state.position.sy);
+            double x = state.position.sx;
+            double y = state.position.sy;
+            int cellID = GridCellMap.getBlockID(x, y);
 
             if (cellID == -1) {
                 fitness -= outsidePenalty;
