@@ -26,29 +26,24 @@ public class CircleGenerator {
         KheperaSimulator sim = new KheperaSimulator(START_STATE);
         ArrayList<Command> commands = new ArrayList<>();
 
-        // Feed the simulator identical commands to create a continuous arc
         for(int i = 0; i < steps; i++) {
             commands.add(new Command(leftSpeed, rightSpeed, timeStep));
         }
 
-        // Let the physics engine calculate the path
         ArrayList<KheperaState> kStates = sim.getKheperaState(commands);
 
         String filename = "docs/circle_training_data.csv";
         ArrayList<State> path = new ArrayList<>();
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
-            // Write the CSV header (this is what your neural network will look for)
-            writer.println("x,y");
+            writer.println("x,y,left_speed,right_speed,duration");
 
-            // Loop through every single step of the simulation
             for (KheperaState ks : kStates) {
-                // Extract the (x,y) position state
                 path.add(ks.position);
                 State pos = ks.position;
 
-                // Write the x and y coordinates to the file, formatted to 4 decimal places
-                writer.printf(Locale.US, "%.4f,%.4f\n", pos.sx, pos.sy);
+                writer.printf(Locale.US, "%.4f,%.4f,%d,%d,%d\n",
+                        pos.sx, pos.sy, LEFT_SPEED, RIGHT_SPEED, TIME_STEP);
             }
 
             System.out.println("Total coordinates generated: " + kStates.size());
