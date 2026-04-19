@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class CircleGenerator {
 
@@ -47,10 +48,9 @@ public class CircleGenerator {
                 State pos = ks.position;
 
                 // Write the x and y coordinates to the file, formatted to 4 decimal places
-                writer.printf("%.4f,%.4f\n", pos.sx, pos.sy);
+                writer.printf(Locale.US, "%.4f,%.4f\n", pos.sx, pos.sy);
             }
 
-            System.out.println("Success! Training data saved to: " + filename);
             System.out.println("Total coordinates generated: " + kStates.size());
 
         } catch (IOException e) {
